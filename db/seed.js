@@ -1,5 +1,6 @@
 const client = require("./client");
 const { users } = require("./seedData");
+const { createUser } = require("./adapters/users");
 
 async function dropTables() {
   try {
@@ -22,12 +23,51 @@ async function createTables() {
   try {
     console.log("Starting to build tables...");
     await client.query(`
-    CREATE TABLE users (
+        CREATE TABLE users (
         id SERIAL PRIMARY KEY,
-        firstName VARCHAR(255), 
-        lastName VARCHAR (255),
+        firstName VARCHAR(255) NOT NULL, 
+        lastName VARCHAR (255) NOT NULL,
         username VARCHAR (255) UNIQUE NOT NULL,
-        password VARCHAR (255) NOT NULL
+        password VARCHAR (255) NOT NULL,
+        Email VARCHAR (255) NOT NULL,
+        is_admin BOOLEAN DEFAULT false,
+        imageURL
+    )
+    `);
+    await client.query(`
+        CREATE TABLE challengers (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        is_admin BOOLEAN DEFAULT false,
+        name VARCHAR(255)  NOT NULL,
+        coachesName VARCHAR(255) NOT NULL,
+        goal VARCHAR(255) NOT NULL
+    )
+    `);
+    await client.query(`
+      CREATE TABLE challenger_ativities (
+        id SERIAL PRIMARY KEY,
+        challenger_id VARCHAR(255) NOT NULL, 
+        challengerActivity_id VARCHAR (255) NOT NULL,
+        is_admin BOOLEAN DEFAULT false
+    )
+    `);
+    await client.query(`
+     CREATE TABLE activities (
+        id SERIAL PRIMARY KEY,
+        admin_id VARCHAR(255) NOT NULL,
+        challengeName VARCHAR (50) NOT NULL,
+        timestamp BOOLEAN DEFAULT false,
+        date VARCHAR(255) UNIQUE NOT NULL,
+        description VARCHAR(255) NOT NULL,
+        challengeType VARCHAR(255) NOT NULL,
+        imageURL 
+    )
+    `);
+    await client.query(`
+    CREATE TABLE admin (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(50) NOT NULL
     )
     `);
     console.log("Finished building tables!");
