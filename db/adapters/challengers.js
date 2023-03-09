@@ -12,3 +12,7 @@ async function createChallenge({ user_id, isAdmin, name, coachName, goal }) {
     throw error;
   }
 }
+
+module.exports = {
+  createChallenge,
+};
